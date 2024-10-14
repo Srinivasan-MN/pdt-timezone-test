@@ -11,7 +11,7 @@ jobs:
         timeout-minutes: 5
         steps:
             - name: checkout repo content
-              uses: actions/chceckout@v2
+              uses: actions/checkout@something
             - name: setup python
               uses: actions/setup-python@v4
               with:
