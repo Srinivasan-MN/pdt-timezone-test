@@ -1,7 +1,7 @@
 name: "PDT time zone testing"
 on:
     schedule:
-    - cron: "2 9-23 * * *"
+    - cron: "52 9-23 * * *"
 
     workflow_dispatch:
 
