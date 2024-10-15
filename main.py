@@ -1,3 +1,8 @@
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install -r requirements.txt
+
+
 import yaml
 
 print("PDT time zone test...")
@@ -25,10 +30,10 @@ def convert_pdt_to_pst():
         # yamlData = yaml.safe_load(file)
         # yamlData = yaml.load(stream=file, Loader=yaml.BaseLoader)
         yamlData = yaml.load(file, Loader=CustomLoader)
-    
+        
     print(yamlData)
         
     with open('.github/workflows/pdt-tz-test1.yml', 'w') as file:
         yaml.dump(yamlData, file,Dumper=CustomDumper,default_flow_style=False)
     
-# convert_pdt_to_pst()    
+convert_pdt_to_pst()    
