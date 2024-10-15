@@ -20,14 +20,14 @@ jobs:
         run: pip install pyyaml
 
       - name: Run Python script to update YAML
-        run: python update_yaml.py
+        run: python main.py
 
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .github/workflows/test.yml
-          git commit -m "Auto-update test.yml with script"
+          git add .github/workflows/pdt-pst.yml
+          git commit -m "Auto-update pdt-pst.yml with script"
           git push origin HEAD
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
