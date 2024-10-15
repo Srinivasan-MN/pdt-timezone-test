@@ -24,8 +24,8 @@ jobs:
 
       - name: Commit and Push Changes
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "Srinivasan"
+          git config --global user.email "srinivasan20012018@gmail.com"
           git add .github/workflows/pdt-tz-test1.yml
           git commit -m "Auto-update pdt-pst.yml with script"
           git push origin HEAD
