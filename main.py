@@ -13,16 +13,16 @@ def construct_yaml_str(self, node):
 
 CustomLoader.add_constructor('tag:yaml.org,2002:bool', construct_yaml_str)
 
-class CustomDumper(yaml.SafeDumper):
-    pass
+# class CustomDumper(yaml.SafeDumper):
+#     pass
 
-def str_presenter(dumper, data):
-    # If the string data is 'on', return it unquoted
-    if data in ['on', 'yes', 'no', 'true', 'false']:
-        return dumper.represent_scalar('tag:yaml.org,2002:str', data)
-    return dumper.represent_scalar('tag:yaml.org,2002:str', data)
+# def str_presenter(dumper, data):
+#     # If the string data is 'on', return it unquoted
+#     if data in ['on', 'yes', 'no', 'true', 'false']:
+#         return dumper.represent_scalar('tag:yaml.org,2002:str', data)
+#     return dumper.represent_scalar('tag:yaml.org,2002:str', data)
 
-CustomDumper.add_representer(str, str_presenter)
+# CustomDumper.add_representer(str, str_presenter)
 
 
 def convert_pdt_to_pst():
@@ -31,9 +31,11 @@ def convert_pdt_to_pst():
         # yamlData = yaml.load(stream=file, Loader=yaml.BaseLoader)
         yamlData = yaml.load(file, Loader=CustomLoader)
         
+        yamlData['on']['schedule'][0]['cron'] = '*/10 * * * *'
+        
     print(yamlData)
         
     with open('.github/workflows/pdt-tz-test1.yml', 'w') as file:
-        yaml.dump(yamlData, file,Dumper=CustomDumper,default_flow_style=False)
+        yaml.dump(yamlData, file)
     
-convert_pdt_to_pst()    
+convert_pdt_to_pst()
