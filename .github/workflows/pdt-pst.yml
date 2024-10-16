@@ -29,7 +29,7 @@ jobs:
         run: |
           git config --global user.name "Srinivasan"
           git config --global user.email "srinivasan20012018@gmail.com"
-          git add .github/workflows/pdt-tz-test1.yml
+          git add .
           git commit -m "Auto-update pdt-pst.yml with script"
           git push origin HEAD
         env:
