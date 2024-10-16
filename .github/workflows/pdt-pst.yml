@@ -6,6 +6,9 @@ on:
 jobs:
   update-yaml:
     runs-on: ubuntu-latest
+    permissions:
+        contents: write
+        
 
     steps:
       - name: Checkout repository
