@@ -25,6 +25,9 @@ jobs:
       - name: Run Python script to update YAML
         run: python main.py
 
+      - name: Check token scopes
+        run: "curl -I -H \"Authorization: token ${{ secrets.PAT_TOKEN }}\" https://api.github.com/users/Undin"
+
       - name: Commit and Push Changes
         run: |
           git config --global user.name "Srinivasan"
@@ -32,5 +35,6 @@ jobs:
           git add .
           git commit -m "Auto-update pdt-pst.yml with script"
           git push origin HEAD
+
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN}}
