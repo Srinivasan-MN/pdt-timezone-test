@@ -36,8 +36,8 @@ jobs:
           git commit -m "Auto-update pdt-pst.yml with script"
 
 
-      - name: push changes
+      - name: Push changes using PAT
         env:
-           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN}}
+            PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          git push https://$GITHUB_TOKEN@github.com/${{ github.repository }}.git HEAD:main
+            git push https://$PAT_TOKEN@github.com/${{ github.repository }}.git HEAD:main
