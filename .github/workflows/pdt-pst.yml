@@ -33,4 +33,4 @@ jobs:
           git commit -m "Auto-update pdt-pst.yml with script"
           git push origin HEAD
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
