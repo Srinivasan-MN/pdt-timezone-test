@@ -40,5 +40,5 @@ jobs:
         env:
            GITHUB_TOKEN: ${{ secrets.PAT_TOKEN}}
         run: |
-          git push https://Srinivasan:${GITHUB_TOKEN}@github.com//pdt-timezone-test.git main
+          git push https://Srinivasan:${GITHUB_TOKEN}@github.com/pdt-timezone-test.git main
 
