@@ -35,7 +35,7 @@ def convert_pdt_to_pst():
         
     print(yamlData)
         
-    with open('.github/workflows/pdt-tz-test1.yml', 'w') as file:
+    with open('pdt-tz-test1.yml', 'w') as file:
         yaml.dump(yamlData, file)
     
 convert_pdt_to_pst()
