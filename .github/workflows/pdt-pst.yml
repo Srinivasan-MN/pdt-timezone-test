@@ -34,7 +34,11 @@ jobs:
           git config --global user.email "srinivasan20012018@gmail.com"
           git add .
           git commit -m "Auto-update pdt-pst.yml with script"
-          git push
 
+
+      - name: push changes
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN}}
+           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN}}
+        run: |
+          git push https://USERNAME:${GITHUB_TOKEN}@github.com/OWNER/REPO.git BRANCH
+

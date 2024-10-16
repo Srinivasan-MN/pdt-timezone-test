@@ -39,3 +39,10 @@ def convert_pdt_to_pst():
         yaml.dump(yamlData, file)
     
 convert_pdt_to_pst()
+
+
+
+
+
+# env:
+#   GITHUB_TOKEN: ${{ secrets.PAT_TOKEN}}
