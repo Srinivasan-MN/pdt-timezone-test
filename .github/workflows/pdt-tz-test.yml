@@ -1,5 +1,5 @@
 name: "PDT time zone testing"
-on:
+'on':
     schedule:
     - cron: "0 12 * * *"
 
