@@ -1,20 +1,25 @@
-jobs:
-  run-updater:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout repo content
-      uses: actions/checkout@v2
-    - name: setup python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    - name: install python packages
-      run: python -m pip install --upgrade pip\npip install -r requirements.txt\n
-    - name: execute py script
-      run: python main.py
-    timeout-minutes: 5
-name: PDT time zone testing
+name: "PDT time zone testing"
 on:
-  schedule:
-  - cron: '*/10 * * * *'
-  workflow_dispatch: ''
+    schedule:
+    - cron: "0 12 * * *"
+
+    workflow_dispatch:
+
+jobs:
+    run-updater:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - name: checkout repo content
+              uses: actions/checkout@v2
+            - name: setup python
+              uses: actions/setup-python@v4
+              with:
+                python-version: "3.10"
+            - name: install python packages
+              run: |
+                python -m pip install --upgrade pip
+                pip install -r requirements.txt
+            - name: execute py script
+              run: python main.py
+
