@@ -1,6 +1,9 @@
 import requests
 import base64
 from yaml import load, dump, BaseLoader, SafeLoader, SafeDumper
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
+
 
 
 OWNER = "Srinivasan-MN"
@@ -10,7 +13,7 @@ def push_to_github(path, content, sha):
     try:
         commit_message = "Updated the file"
         content = base64.b64encode(content.encode(encoding="UTF-8")).decode(encoding="UTF-8")
-        
+        personal_access_token = get_pat()
 
         url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}"
 
@@ -65,6 +68,22 @@ def edit_git_file_content(path):
     except Exception as e:
         print(f"Exception occurred while edit_git_file_content: {str(e)}")
 
-path = ".github/workflows/pdt-tz-test.yml"
-edit_git_file_content(path)
+# path = ".github/workflows/pdt-tz-test.yml"
+# edit_git_file_content(path)
+
+def get_pat():
+    key_vault_name = "devcredentialsmyharvest"
+    key_vault_uri = f"https://{key_vault_name}.vault.azure.net/"
+    
+    credential = DefaultAzureCredential()
+    client = SecretClient(vault_url=key_vault_uri, credential=credential)
+    
+    secret_name = "github-pat"
+    retrieved_secret = client.get_secret(secret_name)
+    github_pat = retrieved_secret.value
+
+    return github_pat
+
+    
+get_pat()
 
