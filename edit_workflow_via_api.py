@@ -16,6 +16,30 @@ class NoQuotesForEmpty(SafeDumper):
 
 NoQuotesForEmpty.add_representer(type(None), NoQuotesForEmpty.represent_none)
 
+def get_pat():
+    try:
+        key_vault_name = "devcredentialsmyharvest"
+        key_vault_uri = f"https://{key_vault_name}.vault.azure.net/"
+        
+        client_id = os.getenv("AZURE_CLIENT_ID")
+        tenant_id = os.getenv("AZURE_TENANT_ID")
+        client_secret = os.getenv("AZURE_CLIENT_SECRET")
+
+        if not client_id or not tenant_id or not client_secret:
+            raise ValueError("Missing environment variables for Azure authentication.")
+
+        credential = ClientSecretCredential(tenant_id=tenant_id, client_id=client_id, client_secret=client_secret)
+        client = SecretClient(vault_url=key_vault_uri, credential=credential)
+        
+        secret_name = "github-pat"
+        retrieved_secret = client.get_secret(secret_name)
+        github_pat = retrieved_secret.value
+
+        print(github_pat)
+        return github_pat
+    except Exception as e:
+        print(f"Exception occurred while get_pat() : {str(e)}")
+
 def push_to_github(path, content, sha):
     try:
         commit_message = "Updated the file"
@@ -66,12 +90,12 @@ def edit_git_file_content(path):
 
         timeout_minutes = yaml_data['jobs']['run-updater']['timeout-minutes']
         yaml_data['jobs']['run-updater']['timeout-minutes'] = int(timeout_minutes)
-        yaml_data['on']['schedule'][0]['cron'] = '*/10 * * * *'
+        yaml_data['on']['schedule'][0]['cron'] = '*/15 * * * *'
         yaml_data['on']['workflow_dispatch'] = None
         
-        with open('test.yml','w') as f:
-            dump(yaml_data, f, Dumper=SafeDumper)
-        # push_to_github(path, dump(yaml_data), file_sha)        
+        # with open('test.yml','w') as f:
+        #     dump(yaml_data, f, Dumper=SafeDumper)
+        push_to_github(path, dump(yaml_data,Dumper=SafeDumper), file_sha)        
         
     except Exception as e:
         print(f"Exception occurred while edit_git_file_content: {str(e)}")
@@ -79,29 +103,6 @@ def edit_git_file_content(path):
 path = ".github/workflows/pdt-tz-test.yml"
 edit_git_file_content(path)
 
-def get_pat():
-    try:
-        key_vault_name = "devcredentialsmyharvest"
-        key_vault_uri = f"https://{key_vault_name}.vault.azure.net/"
-        
-        client_id = os.getenv("AZURE_CLIENT_ID")
-        tenant_id = os.getenv("AZURE_TENANT_ID")
-        client_secret = os.getenv("AZURE_CLIENT_SECRET")
-
-        if not client_id or not tenant_id or not client_secret:
-            raise ValueError("Missing environment variables for Azure authentication.")
-
-        credential = ClientSecretCredential(tenant_id=tenant_id, client_id=client_id, client_secret=client_secret)
-        client = SecretClient(vault_url=key_vault_uri, credential=credential)
-        
-        secret_name = "github-pat"
-        retrieved_secret = client.get_secret(secret_name)
-        github_pat = retrieved_secret.value
-
-        print(github_pat)
-        return github_pat
-    except Exception as e:
-        print(f"Exception occurred while get_pat() : {str(e)}")
 
     
 # get_pat()
