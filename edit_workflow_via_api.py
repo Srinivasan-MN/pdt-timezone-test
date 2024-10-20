@@ -23,7 +23,7 @@ def change_cron_time(cron_time, time_zone):
             cron_time_str += i+" "
 
         print(cron_time_str)
-        return cron_time_str
+        return cron_time_str.strip()
 
         
     except Exception as e:
@@ -120,8 +120,8 @@ def edit_git_file_content(path):
     except Exception as e:
         print(f"Exception occurred while edit_git_file_content: {str(e)}")
 
-# path = ".github/workflows/pdt-tz-test.yml"
-# edit_git_file_content(path)
+path = ".github/workflows/pdt-tz-test.yml"
+edit_git_file_content(path)
 
 # cron_time_str = ""
 # cron_time = " 15 4 * * *   "
@@ -132,8 +132,8 @@ def edit_git_file_content(path):
 #     cron_time_str += i+" "
 # print(cron_time_str)
 
-date_now = datetime.datetime.now()
-print(type(date_now.month))
+# date_now = datetime.datetime.now()
+# print(type(date_now.month))
 
-get_pat()
+# get_pat()
 
