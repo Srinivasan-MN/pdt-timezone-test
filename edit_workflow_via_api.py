@@ -1,7 +1,7 @@
 import os
 import requests
 import base64
-from yaml import load, dump, BaseLoader, SafeLoader, SafeDumper
+from yaml import load, dump, BaseLoader, SafeLoader, SafeDumper, BaseDumper
 from azure.identity import DefaultAzureCredential, ClientSecretCredential
 from azure.keyvault.secrets import SecretClient
 
@@ -9,6 +9,12 @@ from azure.keyvault.secrets import SecretClient
 
 OWNER = "Srinivasan-MN"
 REPO = "pdt-timezone-test"
+
+class NoQuotesForEmpty(SafeDumper):
+    def represent_none(self, _):
+        return self.represent_scalar('tag:yaml.org,2002:null', '')
+
+NoQuotesForEmpty.add_representer(type(None), NoQuotesForEmpty.represent_none)
 
 def push_to_github(path, content, sha):
     try:
@@ -61,16 +67,17 @@ def edit_git_file_content(path):
         timeout_minutes = yaml_data['jobs']['run-updater']['timeout-minutes']
         yaml_data['jobs']['run-updater']['timeout-minutes'] = int(timeout_minutes)
         yaml_data['on']['schedule'][0]['cron'] = '*/10 * * * *'
+        yaml_data['on']['workflow_dispatch'] = None
         
         with open('test.yml','w') as f:
-            dump(yaml_data, f, default_flow_style=False)
+            dump(yaml_data, f, Dumper=SafeDumper)
         # push_to_github(path, dump(yaml_data), file_sha)        
         
     except Exception as e:
         print(f"Exception occurred while edit_git_file_content: {str(e)}")
 
-# path = ".github/workflows/pdt-tz-test.yml"
-# edit_git_file_content(path)
+path = ".github/workflows/pdt-tz-test.yml"
+edit_git_file_content(path)
 
 def get_pat():
     try:
@@ -97,5 +104,5 @@ def get_pat():
         print(f"Exception occurred while get_pat() : {str(e)}")
 
     
-get_pat()
+# get_pat()
 
