@@ -1,7 +1,8 @@
+import os
 import requests
 import base64
 from yaml import load, dump, BaseLoader, SafeLoader, SafeDumper
-from azure.identity import DefaultAzureCredential
+from azure.identity import DefaultAzureCredential, ClientSecretCredential
 from azure.keyvault.secrets import SecretClient
 
 
@@ -72,17 +73,28 @@ def edit_git_file_content(path):
 # edit_git_file_content(path)
 
 def get_pat():
-    key_vault_name = "devcredentialsmyharvest"
-    key_vault_uri = f"https://{key_vault_name}.vault.azure.net/"
-    
-    credential = DefaultAzureCredential()
-    client = SecretClient(vault_url=key_vault_uri, credential=credential)
-    
-    secret_name = "github-pat"
-    retrieved_secret = client.get_secret(secret_name)
-    github_pat = retrieved_secret.value
+    try:
+        key_vault_name = "devcredentialsmyharvest"
+        key_vault_uri = f"https://{key_vault_name}.vault.azure.net/"
+        
+        client_id = os.getenv("AZURE_CLIENT_ID")
+        tenant_id = os.getenv("AZURE_TENANT_ID")
+        client_secret = os.getenv("AZURE_CLIENT_SECRET")
 
-    return github_pat
+        if not client_id or not tenant_id or not client_secret:
+            raise ValueError("Missing environment variables for Azure authentication.")
+
+        credential = ClientSecretCredential(tenant_id=tenant_id, client_id=client_id, client_secret=client_secret)
+        client = SecretClient(vault_url=key_vault_uri, credential=credential)
+        
+        secret_name = "github-pat"
+        retrieved_secret = client.get_secret(secret_name)
+        github_pat = retrieved_secret.value
+
+        print(github_pat)
+        return github_pat
+    except Exception as e:
+        print(f"Exception occurred while get_pat() : {str(e)}")
 
     
 get_pat()
