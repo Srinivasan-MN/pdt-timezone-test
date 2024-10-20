@@ -1,4 +1,5 @@
 import os
+import datetime
 import requests
 import base64
 from yaml import load, dump, BaseLoader, SafeLoader, SafeDumper, BaseDumper
@@ -6,35 +7,47 @@ from azure.identity import DefaultAzureCredential, ClientSecretCredential
 from azure.keyvault.secrets import SecretClient
 
 
-
 OWNER = "Srinivasan-MN"
 REPO = "pdt-timezone-test"
 
-class NoQuotesForEmpty(SafeDumper):
-    def represent_none(self, _):
-        return self.represent_scalar('tag:yaml.org,2002:null', '')
+def change_cron_time(cron_time, time_zone):
+    try:
+        cron_time_str = ""
+        cron_time = (cron_time.strip()).split(" ")
+        
+        if time_zone == "PDT":
+            cron_time[1] = str(int(cron_time[1])-1)
+        if time_zone == "PST":
+            cron_time[1] = str(int(cron_time[1])+1)
+        for i in cron_time:
+            cron_time_str += i+" "
 
-NoQuotesForEmpty.add_representer(type(None), NoQuotesForEmpty.represent_none)
+        print(cron_time_str)
+        return cron_time_str
+
+        
+    except Exception as e:
+        print(f"Exception occurred while change_cron_time() : {str(e)}")
 
 def get_pat():
     try:
-        key_vault_name = "devcredentialsmyharvest"
-        key_vault_uri = f"https://{key_vault_name}.vault.azure.net/"
+        # key_vault_name = "devcredentialsmyharvest"
+        # key_vault_uri = f"https://{key_vault_name}.vault.azure.net/"
         
-        client_id = os.getenv("AZURE_CLIENT_ID")
-        tenant_id = os.getenv("AZURE_TENANT_ID")
-        client_secret = os.getenv("AZURE_CLIENT_SECRET")
+        # client_id = os.getenv("AZURE_CLIENT_ID")
+        # tenant_id = os.getenv("AZURE_TENANT_ID")
+        # client_secret = os.getenv("AZURE_CLIENT_SECRET")
 
-        if not client_id or not tenant_id or not client_secret:
-            raise ValueError("Missing environment variables for Azure authentication.")
+        # if not client_id or not tenant_id or not client_secret:
+        #     raise ValueError("Missing environment variables for Azure authentication.")
 
-        credential = ClientSecretCredential(tenant_id=tenant_id, client_id=client_id, client_secret=client_secret)
-        client = SecretClient(vault_url=key_vault_uri, credential=credential)
+        # credential = ClientSecretCredential(tenant_id=tenant_id, client_id=client_id, client_secret=client_secret)
+        # client = SecretClient(vault_url=key_vault_uri, credential=credential)
         
-        secret_name = "github-pat"
-        retrieved_secret = client.get_secret(secret_name)
-        github_pat = retrieved_secret.value
-
+        # secret_name = "github-pat"
+        # retrieved_secret = client.get_secret(secret_name)
+        # github_pat = retrieved_secret.value
+        github_pat = os.getenv("github_pat")
         print(github_pat)
         return github_pat
     except Exception as e:
@@ -80,6 +93,8 @@ def get_git_file_details(path):
 
 def edit_git_file_content(path):
     try:
+        date_now = datetime.datetime.now()  
+        time_zone = ""      
         file_details = get_git_file_details(path)
         file_sha = file_details['sha']
         # file_content_bytes = file_details['content'].encode(encoding="UTF-8")
@@ -90,7 +105,12 @@ def edit_git_file_content(path):
 
         timeout_minutes = yaml_data['jobs']['run-updater']['timeout-minutes']
         yaml_data['jobs']['run-updater']['timeout-minutes'] = int(timeout_minutes)
-        yaml_data['on']['schedule'][0]['cron'] = '*/15 * * * *'
+        cron_time = yaml_data['on']['schedule'][0]['cron']
+        if date_now.month == 3:
+            time_zone = "PDT"
+        elif date_now.month == 11:
+            time_zone = "PST"
+        yaml_data['on']['schedule'][0]['cron'] = change_cron_time(cron_time, time_zone)
         yaml_data['on']['workflow_dispatch'] = None
         
         # with open('test.yml','w') as f:
@@ -100,10 +120,20 @@ def edit_git_file_content(path):
     except Exception as e:
         print(f"Exception occurred while edit_git_file_content: {str(e)}")
 
-path = ".github/workflows/pdt-tz-test.yml"
-edit_git_file_content(path)
+# path = ".github/workflows/pdt-tz-test.yml"
+# edit_git_file_content(path)
 
+# cron_time_str = ""
+# cron_time = " 15 4 * * *   "
+# cron_time = (cron_time.strip()).split(" ")
+# cron_time[1] = str(int(cron_time[1])+1)
+# print(cron_time)
+# for i in cron_time:
+#     cron_time_str += i+" "
+# print(cron_time_str)
 
-    
-# get_pat()
+date_now = datetime.datetime.now()
+print(type(date_now.month))
+
+get_pat()
 
