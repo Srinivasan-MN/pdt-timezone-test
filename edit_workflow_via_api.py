@@ -19,6 +19,7 @@ def change_cron_time(cron_time, time_zone):
             cron_time[1] = str(int(cron_time[1])-1)
         if time_zone == "PST":
             cron_time[1] = str(int(cron_time[1])+1)
+        cron_time[1] = str(int(cron_time[1])+1)
         for i in cron_time:
             cron_time_str += i+" "
 
