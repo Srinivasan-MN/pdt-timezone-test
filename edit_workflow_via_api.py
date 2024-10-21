@@ -3,8 +3,8 @@ import datetime
 import requests
 import base64
 from yaml import load, dump, BaseLoader, SafeLoader, SafeDumper, BaseDumper
-from azure.identity import DefaultAzureCredential, ClientSecretCredential
-from azure.keyvault.secrets import SecretClient
+# from azure.identity import DefaultAzureCredential, ClientSecretCredential
+# from azure.keyvault.secrets import SecretClient
 
 
 OWNER = "Srinivasan-MN"
