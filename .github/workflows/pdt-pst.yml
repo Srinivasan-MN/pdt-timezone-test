@@ -1,17 +1,17 @@
-name: Update YAML with Python Script
+name: pdt<->pst timezone changer
+run-name: Run name test
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
+
+permissions: write-all
+
 
 jobs:
   update-yaml:
     runs-on: ubuntu-latest
-    permissions:
-        contents: write
-        issues: write
-        pull-requests: write
-        
-        
 
     steps:
       - name: Checkout repository
@@ -20,27 +20,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
-          python-version: '3.10'
+          python-version: '3.12.0'
 
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install -r requirements.txt
 
       - name: Run Python script to update YAML
-        run: python main.py
+        run: python edit_workflow_via_api.py
 
-      - name: Check token scopes
-        run: "curl -I -H \"Authorization: token ${{ secrets.PAT_TOKEN }}\" https://api.github.com/users/Undin"
-
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "Srinivasan"
-          git config --global user.email "srinivasan20012018@gmail.com"
-          git add .
-          git commit -m "Auto-update pdt-pst.yml with script"
-
-
-      - name: Push changes using PAT
-        env:
-            PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-            git push https://$PAT_TOKEN@github.com/${{ github.repository }}.git HEAD:main
