@@ -48,7 +48,7 @@ def get_pat():
         # secret_name = "github-pat"
         # retrieved_secret = client.get_secret(secret_name)
         # github_pat = retrieved_secret.value
-        github_pat = os.getenv("github_pat")
+        github_pat = os.getenv("GITHUB_PAT")
         print(f"Github pat: {github_pat}")
         return github_pat
     except Exception as e:
