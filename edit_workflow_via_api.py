@@ -49,13 +49,14 @@ def get_pat():
         # retrieved_secret = client.get_secret(secret_name)
         # github_pat = retrieved_secret.value
         github_pat = os.getenv("github_pat")
-        print(github_pat)
+        print(f"Github pat: {github_pat}")
         return github_pat
     except Exception as e:
         print(f"Exception occurred while get_pat() : {str(e)}")
 
 def push_to_github(path, content, sha):
     try:
+        print("Entered into push_to_github()")
         commit_message = "Updated the file"
         content = base64.b64encode(content.encode(encoding="UTF-8")).decode(encoding="UTF-8")
         personal_access_token = get_pat()
@@ -82,6 +83,7 @@ def push_to_github(path, content, sha):
 
 def get_git_file_details(path):
     try:
+        print("Entered into get_git_file_details()")
         url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{path}"
         response = requests.get(url)
         # file_content_bytes = response.json()['content'].encode(encoding="UTF-8")
@@ -94,6 +96,7 @@ def get_git_file_details(path):
 
 def edit_git_file_content(path):
     try:
+        print("Entered into edit_git_file_content()")
         date_now = datetime.datetime.now()  
         time_zone = ""      
         file_details = get_git_file_details(path)
