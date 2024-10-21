@@ -32,5 +32,7 @@ jobs:
 
             
       - name: Run Python script to update YAML
+        env:
+            GITHUB_PAT: ${{ secrets.PAT_TOKEN }}  # Ensure it's passed here as well
         run: python edit_workflow_via_api.py
 
