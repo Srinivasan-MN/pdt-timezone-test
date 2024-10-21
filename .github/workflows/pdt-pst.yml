@@ -1,5 +1,5 @@
 name: pdt<->pst timezone changer
-run-name: Run name test
+run-name: pdt<->pst timezone changer
 
 on:
   workflow_dispatch:
@@ -24,7 +24,13 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+    
+      - name: Setting up off environment variables
+        env:
+            GITHUB_PAT: ${{ secrets.PAT_TOKEN }}
+        run: echo "GITHUB_PAT is set"
 
+            
       - name: Run Python script to update YAML
         run: python edit_workflow_via_api.py
 
