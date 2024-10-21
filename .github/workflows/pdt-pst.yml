@@ -24,12 +24,6 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
-    
-      - name: Setting up off environment variables
-        env:
-            GITHUB_PAT: ${{ secrets.PAT_TOKEN }}
-        run: echo "GITHUB_PAT is set:$GITHUBS_PAT"
-
             
       - name: Run Python script to update YAML
         env:
