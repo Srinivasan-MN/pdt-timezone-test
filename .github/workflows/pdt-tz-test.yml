@@ -20,5 +20,5 @@ jobs:
 name: PDT time zone testing
 'on':
   schedule:
-  - cron: 15 38 * * *
+  - cron: 15 40 * * *
   workflow_dispatch: null
